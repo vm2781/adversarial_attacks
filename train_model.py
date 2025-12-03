@@ -32,6 +32,8 @@ model = model.to(device)
 xent_loss = nn.CrossEntropyLoss()
 optimizer = torch.optim.SGD(model.parameters(), lr=args.lr)
 
+print(f"Using device: {device}")
+
 model.train()
 n_epochs = args.epochs
 lr = args.lr

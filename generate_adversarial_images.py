@@ -29,6 +29,8 @@ model = model.to(device)
 model.load_state_dict(torch.load(args.model_path))
 model.eval()
 
+print(f"Using device: {device}")
+
 examples_found = 0
 total_examples = 0
 
