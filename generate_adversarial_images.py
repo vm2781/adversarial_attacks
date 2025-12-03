@@ -1,0 +1,82 @@
+import torch
+import torchattack
+from load_MNIST_data import getMNISTDataLoaders
+import torchvision.models as models
+import argparse
+import matplotlib.pyplot as plt
+import os
+from tqdm import tqdm
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--model', type=str, default='resnet18', choices=['resnet18', 'resnet50'])
+parser.add_argument('--batch_size', type=int, default=64)
+parser.add_argument('--attack', type=str, default='pgd', choices=['pgd'])
+parser.add_argument('--model_path', type=str, default='models/resnet18_mnist_normal.pth')
+parser.add_argument('--output_dir', type=str, required=True)
+args = parser.parse_args()
+os.makedirs(args.output_dir, exist_ok=True)
+
+
+train_loader, val_loader, test_loader = getMNISTDataLoaders(batchSize=args.batch_size)
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+if args.model == 'resnet18':
+    model = models.resnet18(num_classes=10, weights=None)
+elif args.model == 'resnet50':
+    model = models.resnet50(num_classes=10, weights=None)
+
+model.conv1 = torch.nn.Conv2d(1, 64, 7, 2, 3, bias=False)
+model = model.to(device)
+model.load_state_dict(torch.load(args.model_path))
+model.eval()
+
+fooling_examples = []
+fooling_labels = []
+fooling_perturbations = []
+fooled_as_labels = []
+examples_found = 0
+total_examples = 0
+
+adversarial_dataset = []
+fooled_dataset = []
+
+for batch_idx, (images, labels) in tqdm(enumerate(test_loader)):
+    # if examples_found >= target_count:
+        # break
+
+    images, labels = images.to(device), labels.to(device)
+
+    # Generate adversarial examples
+    adversary = torchattack.PGD(model, eps=0.3, steps=7, random_start=True)
+    adv_images = adversary(images, labels)
+
+    # Get model predictions on adversarial examples
+    with torch.no_grad():
+        logits = model(adv_images)
+        _, preds = torch.max(logits, 1)
+
+    # Find which ones actually fool the model (prediction != true label)
+    fooled_mask = (preds != labels)
+    examples_found += fooled_mask.sum().item()
+    total_examples += images.shape[0]
+
+    adversarial_dataset.append(adv_images.cpu())
+    fooled_dataset.append(adv_images[fooled_mask].cpu())
+
+
+torch.save({
+    'adversarial_dataset': torch.cat(adversarial_dataset),
+    'fooled_dataset': torch.cat(fooled_dataset)
+}, f'{args.output_dir}/all_fooling_examples.pth')
+
+torch.save({
+    'adversarial_dataset': adversarial_dataset,
+}, f'{args.output_dir}/all_adversarial_examples.pth')
+
+print(f"\nTotal fooling examples found: {examples_found}")
+print(f"All files saved to : {args.output_dir}")
+print("\nFiles created:")
+print("  - fooling_example_X.pth (tensor data)")
+print("  - fooling_example_X.png (visualization)")
+print("  - all_fooling_examples.pth (all examples combined)")
+
+print(f"Adversarial accuracy: {100 * (1- examples_found / total_examples)}")

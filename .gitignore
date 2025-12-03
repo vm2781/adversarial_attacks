@@ -1,0 +1,4 @@
+output/
+models/
+MNISTData/
+_pycache_/
