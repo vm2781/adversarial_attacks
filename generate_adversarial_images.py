@@ -1,5 +1,6 @@
 import torch
-import torchattack
+from torchattack import PGD
+from torchattacks.attacks.cw import CW
 from load_MNIST_data import getMNISTDataLoaders
 import torchvision.models as models
 import argparse
@@ -9,7 +10,7 @@ from tqdm import tqdm
 parser = argparse.ArgumentParser()
 parser.add_argument('--model', type=str, default='resnet18', choices=['resnet18', 'resnet50'])
 parser.add_argument('--batch_size', type=int, default=64)
-parser.add_argument('--attack', type=str, default='pgd', choices=['pgd'])
+parser.add_argument('--attack', type=str, default='pgd', choices=['pgd', 'cw'])
 parser.add_argument('--model_path', type=str, default='models/resnet18_mnist_normal.pth')
 parser.add_argument('--output_dir', type=str, required=True)
 args = parser.parse_args()
@@ -44,7 +45,10 @@ for batch_idx, (images, labels) in tqdm(enumerate(test_loader), total=len(test_l
     images, labels = images.to(device), labels.to(device)
 
     # Generate adversarial examples
-    adversary = torchattack.PGD(model, eps=0.3, steps=7, random_start=True)
+    if args.attack == 'cw':
+        adversary = CW(model, c=1, kappa=0, steps=50, lr=0.01)
+    elif args.attack == 'pgd':
+        adversary = PGD(model, eps=0.3, steps=7, random_start=True)
     adv_images = adversary(images, labels)
 
     # Get model predictions on adversarial examples
@@ -66,15 +70,15 @@ for batch_idx, (images, labels) in tqdm(enumerate(test_loader), total=len(test_l
 torch.save({
     'image': torch.cat(adversarial_dataset),
     'label': torch.cat(true_labels)
-}, f'{args.output_dir}/all_adversarial_images.pth')
+}, f'{args.output_dir}/all_adversarial_images_{args.attack}.pth')
 
 torch.save({
     'image': torch.cat(fooled_dataset),
     'label': torch.cat(true_labels_fooled)
-}, f'{args.output_dir}/fooled_images.pth')
+}, f'{args.output_dir}/fooled_images_{args.attack}.pth')
 
-print(f"\nTotal fooling examples found: {examples_found}")
+print(f"\nTotal fooling examples found: {examples_found}/{total_examples}")
 print(f"All files saved to : {args.output_dir}")
 
 
-print(f"Adversarial accuracy: {100 * (1- examples_found / total_examples)}")
+print(f"Accuracy on Adversarial Images: {100 * (1- examples_found / total_examples)}")
