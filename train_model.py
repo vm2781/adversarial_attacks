@@ -47,7 +47,7 @@ for i in range(n_epochs):
             if args.attack == 'cw':
                 attack = CW(model, c=1, kappa=0, steps=50, lr=0.01)
             elif args.attack == 'pgd':
-                attack = PGD(model, eps=0.3, alpha=2/255, steps=7, random_start=True)
+                attack = PGD(model, eps=0.3, steps=7, random_start=True)
             images = attack(images, labels)
             model.train()
 
