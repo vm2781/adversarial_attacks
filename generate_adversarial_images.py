@@ -3,7 +3,6 @@ import torchattack
 from load_MNIST_data import getMNISTDataLoaders
 import torchvision.models as models
 import argparse
-import matplotlib.pyplot as plt
 import os
 from tqdm import tqdm
 
@@ -29,17 +28,16 @@ model = model.to(device)
 model.load_state_dict(torch.load(args.model_path))
 model.eval()
 
-fooling_examples = []
-fooling_labels = []
-fooling_perturbations = []
-fooled_as_labels = []
 examples_found = 0
 total_examples = 0
 
 adversarial_dataset = []
 fooled_dataset = []
 
-for batch_idx, (images, labels) in tqdm(enumerate(test_loader)):
+true_labels = []
+true_labels_fooled = []
+
+for batch_idx, (images, labels) in tqdm(enumerate(test_loader), total=len(test_loader), desc='Generating Adversarial Examples'):
     # if examples_found >= target_count:
         # break
 
@@ -61,22 +59,22 @@ for batch_idx, (images, labels) in tqdm(enumerate(test_loader)):
 
     adversarial_dataset.append(adv_images.cpu())
     fooled_dataset.append(adv_images[fooled_mask].cpu())
+    true_labels.append(labels.cpu())
+    true_labels_fooled.append(labels[fooled_mask].cpu())
 
 
 torch.save({
-    'adversarial_dataset': torch.cat(adversarial_dataset),
-    'fooled_dataset': torch.cat(fooled_dataset)
-}, f'{args.output_dir}/all_fooling_examples.pth')
+    'image': torch.cat(adversarial_dataset),
+    'label': torch.cat(true_labels)
+}, f'{args.output_dir}/all_adversarial_images.pth')
 
 torch.save({
-    'adversarial_dataset': adversarial_dataset,
-}, f'{args.output_dir}/all_adversarial_examples.pth')
+    'image': torch.cat(fooled_dataset),
+    'label': torch.cat(true_labels_fooled)
+}, f'{args.output_dir}/fooled_images.pth')
 
 print(f"\nTotal fooling examples found: {examples_found}")
 print(f"All files saved to : {args.output_dir}")
-print("\nFiles created:")
-print("  - fooling_example_X.pth (tensor data)")
-print("  - fooling_example_X.png (visualization)")
-print("  - all_fooling_examples.pth (all examples combined)")
+
 
 print(f"Adversarial accuracy: {100 * (1- examples_found / total_examples)}")
