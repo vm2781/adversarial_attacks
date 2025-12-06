@@ -82,11 +82,9 @@ def run_evaluation(model_name: str, api_key: str, num_examples: int = 20):
     model = load_model(model_name)
     images, labels = get_mnist_samples(num_examples)
     adversarial_images = generate_adversarial_examples(model, images, labels)
-    
-    # Convert all images to base64
+
     images_base64 = [tensor_to_base64(adversarial_images[i]) for i in range(len(adversarial_images))]
-    
-    # Batch into groups of 10
+
     batch_size = 10
     all_predictions = []
     
@@ -95,8 +93,7 @@ def run_evaluation(model_name: str, api_key: str, num_examples: int = 20):
         predictions = classify_batch_with_gemini(batch, api_key)
         all_predictions.extend(predictions)
         time.sleep(4)
-    
-    # Calculate results
+
     results = []
     correct = 0
     
