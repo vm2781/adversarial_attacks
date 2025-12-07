@@ -1,6 +1,7 @@
 import torch
 from torchattack import PGD
 from torchattacks.attacks.cw import CW
+from torchattacks.attacks.pixle import Pixle
 from load_MNIST_data import getMNISTDataLoaders
 import torchvision.models as models
 import argparse
@@ -51,6 +52,8 @@ for batch_idx, (images, labels) in tqdm(enumerate(test_loader), total=len(test_l
         adversary = CW(model, c=1, kappa=0, steps=50, lr=0.01)
     elif args.attack == 'pgd':
         adversary = PGD(model, eps=0.3, steps=7, random_start=True)
+    elif args.attack == 'pixle':
+        adversary = Pixle(model)
     adv_images = adversary(images, labels)
 
     # Get model predictions on adversarial examples

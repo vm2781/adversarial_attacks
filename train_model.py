@@ -7,6 +7,7 @@ import torch
 import os
 from torchattack import PGD
 from torchattacks.attacks.cw import CW
+from torchattacks.attacks.pixle import Pixle
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--model', type=str, default='resnet18', choices=['resnet18', 'resnet50'])
@@ -14,7 +15,7 @@ parser.add_argument('--batch_size', type=int, default=64)
 parser.add_argument('--epochs', type=int, default=10)
 parser.add_argument('--lr', type=float, default=1e-2)
 parser.add_argument('--robust', action='store_true')
-parser.add_argument('--attack', type=str, default='pgd', choices=['pgd', 'cw'])
+parser.add_argument('--attack', type=str, default='pgd', choices=['pgd', 'cw', 'pixle'])
 
 args = parser.parse_args()
 
@@ -48,6 +49,8 @@ for i in range(n_epochs):
                 attack = CW(model, c=1, kappa=0, steps=50, lr=0.01)
             elif args.attack == 'pgd':
                 attack = PGD(model, eps=0.3, steps=7, random_start=True)
+            elif args.attack == 'pixle':
+                attack = Pixle(model)
             images = attack(images, labels)
             model.train()
 
