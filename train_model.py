@@ -25,14 +25,15 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 if args.model == 'resnet18':
     model = models.resnet18(num_classes=10, weights=None)
+    model.conv1 = nn.Conv2d(1, 64, 7, 2, 3, bias=False)
 elif args.model == 'resnet50':
     model = models.resnet50(num_classes=10, weights=None)
+    model.conv1 = nn.Conv2d(1, 64, 7, 2, 3, bias=False)
 elif args.model == 'squeezenet':
     model = SqueezeNetMNIST()
 elif args.model == 'lenet':
     model = LeNet5()
 
-model.conv1 = nn.Conv2d(1, 64, 7, 2, 3, bias=False)
 model = model.to(device)
 
 xent_loss = nn.CrossEntropyLoss()
