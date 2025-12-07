@@ -8,9 +8,10 @@ import os
 from torchattack import PGD
 from torchattacks.attacks.cw import CW
 from torchattacks.attacks.pixle import Pixle
+from models import LeNet5, SqueezeNetMNIST
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--model', type=str, default='resnet18', choices=['resnet18', 'resnet50'])
+parser.add_argument('--model', type=str, default='resnet18', choices=['resnet18', 'resnet50', 'squeezenet', 'lenet'])
 parser.add_argument('--batch_size', type=int, default=64)
 parser.add_argument('--epochs', type=int, default=10)
 parser.add_argument('--lr', type=float, default=1e-2)
@@ -26,6 +27,10 @@ if args.model == 'resnet18':
     model = models.resnet18(num_classes=10, weights=None)
 elif args.model == 'resnet50':
     model = models.resnet50(num_classes=10, weights=None)
+elif args.model == 'squeezenet':
+    model = SqueezeNetMNIST()
+elif args.model == 'lenet':
+    model = LeNet5()
 
 model.conv1 = nn.Conv2d(1, 64, 7, 2, 3, bias=False)
 model = model.to(device)

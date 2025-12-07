@@ -11,7 +11,7 @@ from tqdm import tqdm
 parser = argparse.ArgumentParser()
 parser.add_argument('--model', type=str, default='resnet18', choices=['resnet18', 'resnet50'])
 parser.add_argument('--batch_size', type=int, default=64)
-parser.add_argument('--attack', type=str, default='pgd', choices=['pgd', 'cw'])
+parser.add_argument('--attack', type=str, default='pgd', choices=['pgd', 'cw', 'pixle'])
 parser.add_argument('--model_path', type=str, default='models/resnet18_mnist_normal.pth')
 parser.add_argument('--output_dir', type=str, required=True)
 args = parser.parse_args()
