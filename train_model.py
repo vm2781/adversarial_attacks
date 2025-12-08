@@ -56,13 +56,13 @@ for i in range(n_epochs):
             elif args.attack == 'pgd':
                 attack = PGD(model, eps=0.3, steps=7, random_start=True)
             elif args.attack == 'pixle':
-                attack = Pixle(model)
-            images = attack(images, labels)
+                attack = Pixle(model, restarts=10)
+            adv_images = attack(images, labels)
             model.train()
 
         optimizer.zero_grad()
-        outputs = model(images)
-        loss = xent_loss(outputs, labels)
+        outputs = model(torch.cat((adv_images, images), 0) if args.robust else images)
+        loss = xent_loss(outputs, torch.cat((labels, labels), 0) if args.robust else labels)
         loss.backward()
         optimizer.step()
 
