@@ -1,0 +1,12 @@
+Running this notebook will:
+
+1) Train clean + MIFGSM-robust LeNet and SqueezeNet on MNIST.
+
+2) Save them into models/lenet5_mnist_clean.pth, models/lenet5_mnist_robust_mifgsm.pth,
+models/squeezenet_mnist_clean.pth, models/squeezenet_mnist_robust_mifgsm.pth.
+
+3) Generate 4 adversarial test sets under MIFGSM and save:
+adv_lenet_clean_mifgsm.pt, adv_lenet_robust_mifgsm.pt,
+adv_squeezenet_clean_mifgsm.pt, adv_squeezenet_robust_mifgsm.pt.
+
+4) Evaluate clean vs robust models on clean data, white-box MIFGSM, and cross-model MIFGSM transfer.
