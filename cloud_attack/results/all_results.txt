@@ -1,4 +1,0 @@
-lenet - 5/100
-lenet_robust - 11/100
-squeeznet - 7/100
-squeezenet_robust - 15/100
