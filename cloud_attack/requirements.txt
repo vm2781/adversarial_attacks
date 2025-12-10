@@ -1,0 +1,5 @@
+fastapi==0.109.0
+uvicorn==0.27.0
+torchattacks==3.5.1
+google-cloud-aiplatform>=1.60.0
+Pillow==10.2.0
