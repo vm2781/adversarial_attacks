@@ -8,7 +8,7 @@ import base64
 import google.generativeai as genai
 import random
 import time
-
+import torchvision.models as models
 from app.models import LeNet5, SqueezeNetMNIST
 
 
@@ -25,9 +25,12 @@ MODEL_REGISTRY = {
 
 
 def load_model(model_name: str):
-    config = MODEL_REGISTRY[model_name]
-    model = config["class"]()
-    model.load_state_dict(torch.load(config["path"], map_location="cpu"))
+    if model_name == "imagenet":
+        model = models.squeezenet1_1(weights=models.SqueezeNet1_1_Weights.IMAGENET1K_V1)
+    else:
+        config = MODEL_REGISTRY[model_name]
+        model = config["class"]()
+        model.load_state_dict(torch.load(config["path"], map_location="cpu"))
     model.eval()
     return model
 
@@ -43,9 +46,9 @@ def tensor_to_base64(tensor):
 
 def generate_adversarial_examples(model, attack_type, images, labels):
     if attack_type == "pgd":
-        attack = torchattacks.PGD(model, eps=0.3, steps=7, random_start=True)
+        attack = torchattacks.PGD(model, eps=0.3, steps=7)
     elif attack_type == "mifgsm":
-        attack = torchattacks.MIFGSM(model, eps=0.3, steps=7, decay=1.0)
+        attack = torchattacks.MIFGSM(model, eps=0.3, steps=7)
     elif attack_type == "pixle":
         attack = torchattacks.Pixle(model, restarts=10, max_iterations=5)
     else:

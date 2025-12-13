@@ -7,7 +7,9 @@ RUN pip install --no-cache-dir \
     uvicorn==0.27.0 \
     torchattacks==3.5.1 \
     google-generativeai>=0.5.0 \
-    Pillow==10.2.0
+    Pillow==10.2.0 \
+    pandas==2.1.4 \
+    numpy==1.26.0
 
 COPY app/ ./app/
 
