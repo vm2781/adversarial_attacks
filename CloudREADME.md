@@ -69,7 +69,8 @@ gcloud run deploy adversarial-mnist \
     --platform=managed \
     --allow-unauthenticated \
     --set-env-vars=GEMINI_API_KEY=YOUR_GEMINI_API_KEY \
-    --memory=4Gi \
+    --cpu=4 \
+    --memory=16Gi \
     --timeout=600
 ```
 
