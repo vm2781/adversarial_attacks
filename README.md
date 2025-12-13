@@ -1,6 +1,6 @@
 # Adversarial Attack Evaluation System
 
-A serverless system that generates adversarial examples against neural networks and tests their transferability to Google's Gemini 2.0 Flash vision model.
+A serverless system that generates adversarial examples against neural networks and tests their transferability to Google's Gemini 2.0 Flash vision model. Inside folder `cloud_attacks`
 
 ## What It Does
 
