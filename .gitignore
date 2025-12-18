@@ -1,6 +1,0 @@
-output/
-MNISTData/
-__pycache__/
-models/
-resnet_files/pgd_robust_adversarial_examples_resnet18/
-resnet_files/pgd_robust_adversarial_examples_resnet18/
