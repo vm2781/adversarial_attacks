@@ -6,7 +6,7 @@ This repository contains code, experiments, and analysis for studying **adversar
 
 ## Overview
 
-Neural networks achieve impressive accuracy on image classification tasks, yet remain vulnerable to **adversarial examples** where inputs with small, often imperceptible perturbations that cause confident misclassification. This project provides a comprehensive study of:
+Neural networks achieve impressive accuracy on image classification tasks, yet remain vulnerable to **adversarial examples** (inputs with small, often imperceptible perturbations that cause confident misclassification). This project provides a comprehensive study of:
 
 - **Attack effectiveness**: Comparing PGD, MI-FGSM, and Pixle attacks
 - **Defensive robustness**: Evaluating standard vs. adversarially-trained models
@@ -64,6 +64,8 @@ A black-box attack that perturbs images by rearranging pixels through random sea
 |-------|-----------|-------------------|
 | **LeNet-5** | ~44k | Standard, PGD-robust, MI-FGSM-robust, Pixle-robust |
 | **SqueezeNet** | ~740k | Standard, PGD-robust, MI-FGSM-robust, Pixle-robust |
+
+A copy of the trained model weights can be found under [`cloud_attack/app/model_weights/`](cloud_attack/app/model_weights/).
 
 ### Model Zoo (for Local Transferability Analysis)
 
@@ -181,7 +183,7 @@ Or use Google Colab (all notebooks include Colab badges for one-click execution)
 
 For testing adversarial examples against Google Gemini 2.0 Flash, see the detailed instructions in:
 
-📖 **[CloudREADME.md](CloudREADME.md)**
+📖 **[cloud_attack/README.md](cloud_attack/README.md)**
 
 The cloud pipeline:
 1. Deploys trained models to Google Cloud Run
