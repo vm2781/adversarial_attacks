@@ -183,7 +183,7 @@ Or use Google Colab (all notebooks include Colab badges for one-click execution)
 
 For testing adversarial examples against Google Gemini 2.0 Flash, see the detailed instructions in:
 
-📖 **[cloud_attack/README.md](cloud_attack/cloudREADME.md)**
+📖 **[cloud_attack/README.md](cloud_attack/CloudREADME.md)**
 
 The cloud pipeline:
 1. Deploys trained models to Google Cloud Run
