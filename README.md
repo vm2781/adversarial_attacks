@@ -99,9 +99,6 @@ This effectively doubles the training set and forces models to learn features ro
 
 ### Cloud Transfer Attack Success (MNIST → Gemini 2.0 Flash)
 
-<p align="center">
-  <img src="plots/cloud_attack_heatmap.png" alt="Cloud Attack Results" width="600">
-</p>
 
 | Source Model | PGD | MI-FGSM | Pixle |
 |-------------|-----|---------|-------|
@@ -115,9 +112,6 @@ This effectively doubles the training set and forces models to learn features ro
 
 ### Perturbation Magnitude (L₂ Distance)
 
-<p align="center">
-  <img src="plots/l2_perturbation_heatmap.png" alt="L2 Perturbation" width="500">
-</p>
 
 | Attack | Avg L₂ Perturbation |
 |--------|---------------------|
