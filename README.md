@@ -149,24 +149,6 @@ python src/train_model.py --model squeezenet --robust --attack pgd --epochs 10
 python src/train_model.py --model lenet --robust --attack mifgsm --epochs 10
 ```
 
-### Generate Adversarial Examples
-
-```bash
-# Generate PGD adversarial examples
-python scripts/generate_adversarial_images.py \
-    --model lenet \
-    --attack pgd \
-    --model_path models/lenet_mnist_normal.pth \
-    --output_dir adversarial_examples/
-
-# Generate Pixle adversarial examples
-python scripts/generate_adversarial_images.py \
-    --model squeezenet \
-    --attack pixle \
-    --model_path models/squeezenet_mnist_robust_pgd.pth \
-    --output_dir adversarial_examples/
-```
-
 ### Run Notebooks
 
 Open any notebook in `notebooks/` to reproduce experiments:
